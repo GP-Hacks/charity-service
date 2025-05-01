@@ -1,8 +1,8 @@
-FROM golang:1.23-alpine AS builder
+FROM golang:1.24-alpine AS builder
 
 WORKDIR /app
 
-COPY charity/go.mod ./
+COPY charity/go.mod charity/go.sum ./
 RUN go mod download
 
 COPY . .
@@ -15,6 +15,7 @@ FROM alpine:latest
 WORKDIR /root/
 
 COPY --from=builder /app/charity/cmd/charity/charity_service .
+COPY --from=builder /app/charity/config/config.yaml ./config/config.yaml
 
 EXPOSE 8080
 
