@@ -2,25 +2,45 @@ package charity_service
 
 import (
 	"context"
-	"slices"
 
-	"github.com/GP-Hacks/kdt2024-charity/internal/models"
-	"github.com/GP-Hacks/kdt2024-charity/internal/services"
+	"github.com/GP-Hacks/charity/internal/models"
 )
 
-func (cs *CharityService) GetCollections(ctx context.Context, offset, limit int64) ([]*models.Collection, error) {
-	return cs.collectionsRepository.GetCollections(ctx, offset, limit)
+func (cs *CharityService) GetCollections(ctx context.Context, offset, limit int64) ([]*models.CollectionWithCategory, error) {
+	colls, err := cs.collectionsRepository.Get(ctx, offset, limit)
+	if err != nil {
+		return []*models.CollectionWithCategory{}, err
+	}
+
+	res := make([]*models.CollectionWithCategory, len(colls))
+	for i, coll := range colls {
+		cat, err := cs.categoriesRepository.GetById(ctx, coll.ID)
+		if err != nil {
+			return []*models.CollectionWithCategory{}, err
+		}
+
+		res[i] = coll.ToCollectionWithCategory(cat.Name)
+	}
+
+	return res, nil
 }
 
-func (cs *CharityService) GetCollectionsByCategory(ctx context.Context, category string, offset, limit int64) ([]*models.Collection, error) {
-	categories, err := cs.categoriesRepository.Get(ctx)
+func (cs *CharityService) GetCollectionsByCategory(ctx context.Context, category string, offset, limit int64) ([]*models.CollectionWithCategory, error) {
+	cat, err := cs.categoriesRepository.GetByName(ctx, category)
 	if err != nil {
-		return nil, err
+		return []*models.CollectionWithCategory{}, err
 	}
 
-	if !slices.Contains(categories, category) {
-		return nil, services.CategoryNotFound
+	colls, err := cs.collectionsRepository.GetByCategory(ctx, offset, limit, cat.ID)
+	if err != nil {
+		return []*models.CollectionWithCategory{}, err
 	}
 
-	return cs.collectionsRepository.GetCollectionsByCategory(ctx, category, offset, limit)
+	res := make([]*models.CollectionWithCategory, len(colls))
+	for i, coll := range colls {
+		res[i] = coll.ToCollectionWithCategory(category)
+	}
+
+	return res, nil
+
 }
