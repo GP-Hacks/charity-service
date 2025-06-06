@@ -10,7 +10,8 @@ import (
 
 type Config struct {
 	Grpc struct {
-		Port string `mapstructure:"port"`
+		Port                string `mapstructure:"port"`
+		UsersServiceAddress string `mapstructure:"users_service_address"`
 	} `mapstructure:"grpc"`
 
 	Logging struct {
@@ -74,6 +75,7 @@ func LoadConfig(path string) {
 
 func setDefaults(v *viper.Viper) {
 	v.SetDefault("grpc.port", "8000")
+	v.SetDefault("grpc.users_service_address", "")
 
 	v.SetDefault("postgres.address", "http://localhost:5432")
 	v.SetDefault("postgres.user", "admin")
