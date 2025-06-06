@@ -1,5 +1,6 @@
 grpc:
   port: "8080"
+  users_service_address: "users-service:8080"
 
 # postgres:
 #   user: ""
@@ -8,6 +9,5 @@ grpc:
 #   address: ""
 
 logging:
-  isProduction: true
+  isProduction: ${APP_LOGGING_IS_PRODUCTION}
   vectorURL: "http://vector:9880"
-
