@@ -1,7 +1,15 @@
 package user_adapter
 
-type UserAdapter struct{}
+import (
+	desc "github.com/GP-Hacks/proto/pkg/api/user"
+)
 
-func NewUserAdapter() *UserAdapter {
-	return &UserAdapter{}
+type UserAdapter struct {
+	client desc.UserServiceClient
+}
+
+func NewUserAdapter(c desc.UserServiceClient) *UserAdapter {
+	return &UserAdapter{
+		client: c,
+	}
 }
