@@ -3,7 +3,6 @@ module github.com/GP-Hacks/charity
 go 1.24.2
 
 require (
-	github.com/GP-Hacks/proto v1.2.18
 	github.com/jackc/pgx/v5 v5.7.5
 	github.com/rs/zerolog v1.34.0
 	github.com/spf13/viper v1.20.1
@@ -11,6 +10,7 @@ require (
 )
 
 require (
+	github.com/GP-Hacks/proto v1.3.2 // indirect
 	github.com/fsnotify/fsnotify v1.8.0 // indirect
 	github.com/go-viper/mapstructure/v2 v2.2.1 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect
